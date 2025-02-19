@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatDate, getWindDirection } from "@/lib/utils"
 import Image from "next/image"
+import { FiveDayForecast } from "./FiveDayForecast"
 
 interface MetricSi {
   temp: number
@@ -211,6 +212,9 @@ export default function WeatherDisplay() {
               </CardContent>
             </Card>
           )}
+          <div className="mt-8">
+          <FiveDayForecast />
+        </div>
         </div>
       </main>
 
@@ -262,37 +266,74 @@ function MetricCard({ icon, label, value, subValue }: MetricCardProps) {
     </div>
   )
 }
+interface WeatherAdviceProps {
+  temp: number;
+  humidity: number;
+  uv: number;
+}
 
-function WeatherAdvice({ temp, humidity, uv }) {
+function WeatherAdvice({ temp, humidity, uv }: WeatherAdviceProps) {
   const recommendations = []
+ // Recomendación para temperatura alta
+ if (temp > 30) {
+  recommendations.push({
+    title: "Temperatura Alta",
+    advice:
+      "Se recomienda mantenerse hidratado y evitar actividades al aire libre prolongadas.",
+  });
+}
 
-  if (temp > 30) {
-    recommendations.push({
-      title: "Temperatura Alta",
-      advice: "Se recomienda mantenerse hidratado y evitar actividades al aire libre prolongadas.",
-    })
-  }
+// Recomendación para temperatura baja
+if (temp < 10) {
+  recommendations.push({
+    title: "Temperatura Baja",
+    advice:
+      "Se recomienda abrigarse bien para evitar resfriados o hipotermia.",
+  });
+}
 
-  if (humidity > 70) {
-    recommendations.push({
-      title: "Humedad Alta",
-      advice: "La sensación térmica puede ser mayor. Tome precauciones adicionales.",
-    })
-  }
+// Recomendación para humedad alta
+if (humidity > 70) {
+  recommendations.push({
+    title: "Humedad Alta",
+    advice:
+      "La sensación térmica puede ser mayor. Tome precauciones adicionales.",
+  });
+}
 
-  if (uv >= 6) {
-    recommendations.push({
-      title: "Índice UV Alto",
-      advice: "Use protector solar y busque áreas con sombra.",
-    })
-  }
+// Recomendación para humedad baja
+if (humidity < 30) {
+  recommendations.push({
+    title: "Humedad Baja",
+    advice:
+      "Puede experimentar sequedad en la piel y garganta. Beba suficiente agua.",
+  });
+}
 
-  if (recommendations.length === 0) {
-    recommendations.push({
-      title: "Condiciones Favorables",
-      advice: "Clima adecuado para actividades normales en el campus.",
-    })
-  }
+// Recomendación para índice UV alto
+if (uv >= 6) {
+  recommendations.push({
+    title: "Índice UV Alto",
+    advice: "Use protector solar y busque áreas con sombra.",
+  });
+}
+
+// Recomendación para índice UV moderado
+if (uv >= 3 && uv < 6) {
+  recommendations.push({
+    title: "Índice UV Moderado",
+    advice:
+      "Se recomienda usar protector solar si va a estar al aire libre por períodos prolongados.",
+  });
+}
+
+// Si no se cumple ninguna condición, se muestra una recomendación por defecto
+if (recommendations.length === 0) {
+  recommendations.push({
+    title: "Condiciones Favorables",
+    advice: "Clima adecuado para actividades normales en el campus.",
+  });
+}
 
   return (
     <>
@@ -300,6 +341,8 @@ function WeatherAdvice({ temp, humidity, uv }) {
         <div key={index} className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-semibold text-[#003876]">{rec.title}</h4>
           <p className="text-gray-600 text-sm mt-1">{rec.advice}</p>
+
+          
         </div>
       ))}
     </>
