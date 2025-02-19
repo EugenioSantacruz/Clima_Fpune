@@ -48,7 +48,7 @@ export default function WeatherDisplay() {
   useEffect(() => {
     async function fetchWeather() {
       try {
-        const response = await fetch("/api/weather")
+        const response = await fetch("/api/weather") // ✅ Ruta correcta
         if (!response.ok) throw new Error("Error al cargar datos meteorológicos")
         const data = await response.json()
         setWeather(data)
@@ -58,12 +58,15 @@ export default function WeatherDisplay() {
         setLoading(false)
       }
     }
-
-    fetchWeather()
-    const interval = setInterval(fetchWeather, 300000) // Actualizar cada 5 minutos
-    return () => clearInterval(interval)
+  
+    fetchWeather() // Ejecuta la primera vez
+  
+    const interval = setInterval(fetchWeather, 300000) // ✅ Se actualiza cada 5 min (300,000 ms)
+  
+    return () => clearInterval(interval) // ✅ Limpia el intervalo al desmontar el componente
   }, [])
-
+  
+  
   if (error) {
     return <div className="p-4 bg-red-50 text-red-600 rounded-lg">{error}</div>
   }
@@ -77,7 +80,7 @@ export default function WeatherDisplay() {
             <div className="flex items-center space-x-2 text-sm">
               <span>Email: secretaria@fpune.edu.py</span>
               <span>|</span>
-              <span>Tel: (061) 575.112/3</span>
+              <span>Tel: +595 21 3281244 / +595 21 3281252</span>
             </div>
           </div>
         </div>
@@ -104,14 +107,14 @@ export default function WeatherDisplay() {
 
           {/* Panel Principal del Clima */}
           <Card className="bg-white shadow-lg">
-            <CardContent className="p-6">
+            <CardContent className="p-8">
               {loading ? (
                 <LoadingState />
               ) : weather ? (
                 <div className="space-y-6">
                   {/* Tiempo de Observación */}
-                  <div className="text-center text-gray-600">
-                    <p>Última Actualización: {formatDate(weather.observations[0].obsTimeLocal)}</p>
+                  <div className="text-center text-gray-600 mt-3">
+                    <p className="capitalize">Última Actualización: {formatDate(weather.observations[0].obsTimeLocal)}</p>
                     <p className="text-sm">
                       {weather.observations[0].neighborhood}, {weather.observations[0].country}
                     </p>
@@ -158,8 +161,8 @@ export default function WeatherDisplay() {
                   {/* Datos Adicionales */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <Card>
-                      <CardContent className="p-4">
-                        <h4 className="text-[#003876] font-semibold mb-2">Precipitación</h4>
+                      <CardContent className="p-4 mt-3">
+                        <h4 className="text-[#003876] font-semibold mb-2 ">Precipitación</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span className="text-gray-600">Tasa actual:</span>
@@ -173,7 +176,7 @@ export default function WeatherDisplay() {
                       </CardContent>
                     </Card>
                     <Card>
-                      <CardContent className="p-4">
+                      <CardContent className="p-4 mt-3">
                         <h4 className="text-[#003876] font-semibold mb-2">Ubicación</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between">
@@ -196,7 +199,7 @@ export default function WeatherDisplay() {
           {/* Recomendaciones */}
           {!loading && weather && (
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="p-6 mt-3">
                 <h3 className="text-xl font-bold text-[#003876] mb-4">Recomendaciones</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <WeatherAdvice
