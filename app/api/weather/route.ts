@@ -6,7 +6,7 @@ const BASE_URL = "https://api.weather.com/v2/pws/observations/current"
 
 export async function GET() {
   try {
-    const url = `${BASE_URL}?stationId=${STATION_ID}&format=json&units=e&apiKey=${API_KEY}`
+    const url = `${BASE_URL}?stationId=${STATION_ID}&format=json&units=s&apiKey=${API_KEY}`
     const response = await fetch(url)
     console.log()
 
